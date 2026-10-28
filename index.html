@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Cache-Control" content="no-cache">
 </head>
 <body>
 <title>Business plan sérum autologue</title>
@@ -211,8 +212,8 @@ td.neg{color:var(--crit-ink)}
           <div id="chartCA"></div>
         </section>
         <section class="card">
-          <h2>Trésorerie en fin d'année</h2>
-          <p class="sub">Avec l'apport et les subventions. Sous zéro, l'apport ne suffit pas.</p>
+          <h2>Trésorerie cumulée de l'activité</h2>
+          <p class="sub">Sans aucun financement extérieur. Le point le plus bas correspond au besoin de financement.</p>
           <div id="chartCash"></div>
         </section>
       </div>
@@ -230,13 +231,13 @@ td.neg{color:var(--crit-ink)}
           <div class="tbl" id="cash"></div>
         </section>
         <section class="card">
-          <h2>Financement de départ</h2>
-          <p class="sub">Ce qu'il faut avoir en caisse au moment le plus difficile, et d'où vient l'argent.</p>
+          <h2>Besoin de financement</h2>
+          <p class="sub">Ce qu'il faut avoir en caisse pour passer le moment le plus difficile.</p>
           <div class="tbl" id="fin"></div>
         </section>
       </div>
 
-      <p class="note">Hypothèses indicatives à valider : prix et volumes auprès des pharmacies hospitalières, coûts d'aménagement auprès d'un bureau d'études salles propres, taux de remboursement auprès de l'Assurance Maladie. Montants HT, TVA non modélisée. Impôt sur les sociétés : 15 % jusqu'à 42 500 € de bénéfice puis 25 %, avec report des pertes. Aucun emprunt : l'activité est financée par l'apport et les subventions.</p>
+      <p class="note">Hypothèses indicatives à valider : prix et volumes auprès des pharmacies hospitalières, coûts d'aménagement auprès d'un bureau d'études salles propres, taux de remboursement auprès de l'Assurance Maladie. Montants HT, TVA non modélisée. Impôt sur les sociétés : 15 % jusqu'à 42 500 € de bénéfice puis 25 %, avec report des pertes. Le simulateur ne fixe pas de mode de financement : il calcule le besoin à couvrir.</p>
     </main>
   </div>
 </div>
@@ -259,7 +260,6 @@ const D = {
   f_assur:9000, f_maint:18000, f_env:7000, f_energie:9000, f_compta:14000, f_logi:6000, f_comm:10000, f_div:5000, fixM0:30,
   cx_amen:130000, cxd_amen:10, cx_iso:120000, cxd_iso:7, cx_centri:18000, cxd_centri:5, cx_froid:30000, cxd_froid:5,
   cx_mat:22000, cxd_mat:5, cx_info:12000, cxd_info:3, cx_qualif:45000, cxd_qualif:5, cx_conseil:55000, cxd_conseil:5,
-  apport:700000, subv:100000,
   dso:60, dpo:30, stock:30
 };
 const CAPEX = [["amen","Aménagement zone propre (cloisons, sas, ventilation)"],["iso","Isolateur stérile classe A"],["centri","Centrifugeuses réfrigérées"],["froid","Congélateurs, réfrigérateurs, suivi des températures"],["mat","Petit matériel, remplissage, étiquetage"],["info","Informatique et logiciels"],["qualif","Qualification initiale et validation du procédé"],["conseil","Conseil réglementaire, dossier ANSM, juridique"]];
@@ -302,7 +302,7 @@ function compute(S){
     o.fix = fixBase*inf*(t===0 ? S.fixM0/100 : 1);
     o.ebe = o.mb - o.pers - o.loyer - o.fix;
     o.dap = t===0 ? 0 : capItems.reduce((a,c)=> a + (t<=c.d ? c.a/c.d : 0), 0);
-    o.repSub = t===0 ? 0 : S.subv/5;
+    o.repSub = 0;
     o.rcai = o.ebe - o.dap + o.repSub;
     let base = o.rcai;
     if (base < 0){ deficit += -base; base = 0; } else { const u = Math.min(deficit, base); deficit -= u; base -= u; }
@@ -313,10 +313,8 @@ function compute(S){
     o.dBfr = o.bfr - prevBFR; prevBFR = o.bfr;
     o.capex = t===0 ? capex : 0;
     o.depot = t===0 ? depot : 0;
-    o.apport = t===0 ? S.apport : 0;
-    o.subv = t===0 ? S.subv : 0;
     o.fluxActi = o.caf - o.dBfr - o.capex - o.depot;
-    o.flux = o.fluxActi + o.apport + o.subv;
+    o.flux = o.fluxActi;
     cash += o.flux; o.cash = cash;
     cumA += o.fluxActi; o.cumActi = cumA;
     o.charges = o.cv + o.pers + o.loyer + o.fix + o.dap;
@@ -330,7 +328,6 @@ function horizon(R, S, N){
   const y = R.y.slice(0, N+1), H = {};
   let minA = 0, minAY = 0; for (const o of y){ if (o.cumActi < minA){ minA = o.cumActi; minAY = o.t; } }
   H.besoin = -minA; H.besoinY = minAY;
-  H.apportNec = Math.max(0, H.besoin - S.subv);
   let mc = Infinity, mcy = 0; for (const o of y){ if (o.cash < mc){ mc = o.cash; mcy = o.t; } }
   H.minCash = mc; H.minCashY = mcy;
   H.firstEbe = (y.find(o=>o.t>0 && o.ebe>0)||{}).t ?? null;
@@ -397,10 +394,6 @@ const SECTIONS = [
     F("fixM0","Part des frais fixes payée pendant le montage","%","",5)
   ]},
   {t:"Investissements (An 0)", items:[{type:"capex"}]},
-  {t:"Financement", items:[
-    F("apport","Apport en capital","€","Argent mis dans la société au départ.",10000),
-    F("subv","Subventions (Bpifrance, Région)","€","Reçues en An 0, reprises au résultat sur 5 ans.",5000)
-  ]},
   {t:"Délais de paiement", items:[
     F("dso","Délai de paiement des clients","jours","Hôpitaux publics : 50 jours légaux, souvent dépassés.",5),
     F("dpo","Délai de paiement des fournisseurs","jours","",5),
@@ -506,10 +499,10 @@ function lineChart(el, v, labels){
   g+=`<text x="${pts[mi][0]}" y="${pts[mi][1]+(v[mi]<0?18:-10)}" text-anchor="middle" style="fill:var(--ink-2)">plus bas ${keur(v[mi])}</text>`;
   g+=`<line id="xh" x1="0" x2="0" y1="${m.t}" y2="${H-m.b}" stroke="var(--ink-3)" stroke-dasharray="3 3" visibility="hidden"/>`;
   g+=`<rect x="${m.l-10}" y="${m.t}" width="${W-m.l-m.r+20}" height="${H-m.t-m.b}" fill="transparent" id="hit"/>`;
-  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Trésorerie en fin d'année">${g}</svg>`;
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Trésorerie cumulée de l'activité">${g}</svg>`;
   const svg=el.querySelector("svg"), hit=el.querySelector("#hit"), xh=el.querySelector("#xh");
   hit.addEventListener("pointermove",e=>{ const b=svg.getBoundingClientRect(); const x=(e.clientX-b.left)*W/b.width; const i=n===1?0:Math.max(0,Math.min(n-1,Math.round((x-m.l)/((W-m.l-m.r)/(n-1)))));
-    xh.setAttribute("x1",xv(i)); xh.setAttribute("x2",xv(i)); xh.setAttribute("visibility","visible"); showTip(e,`<b>${labels[i]}</b><br>Trésorerie : ${eur(v[i])}`); });
+    xh.setAttribute("x1",xv(i)); xh.setAttribute("x2",xv(i)); xh.setAttribute("visibility","visible"); showTip(e,`<b>${labels[i]}</b><br>Cumul : ${eur(v[i])}`); });
   hit.addEventListener("pointerleave",()=>{ xh.setAttribute("visibility","hidden"); hideTip(); });
 }
 function table(rows, N){
@@ -527,13 +520,11 @@ function render(){
   const R=compute(S), N=HZ, H=horizon(R,S,N), y=R.y, yN=H.last, labels=YL.slice(0,N+1);
   const per = N===1 ? "sur 1 an" : `sur ${N} ans`;
   const v=document.getElementById("verdict"); let cls,ic,title,txt;
-  if (H.minCash<0){ cls="bad"; ic="!"; title=`L'apport ne suffit pas : il manque ${eur(-H.minCash)}`; txt=`La trésorerie passe sous zéro en ${YL[H.minCashY]}. Il faut apporter au moins ${eur(H.apportNec)} (subventions déduites), ou revoir le prix, les volumes ou les investissements.`; }
-  else if (H.firstEbe===null){ cls="warn"; ic="!"; title=`Pas encore rentable ${per}`; txt=`L'apport couvre les besoins, mais l'activité ne dégage pas encore de bénéfice d'exploitation en ${YL[N]}.`; }
-  else { cls="ok"; ic="✓"; title=`Rentable à partir de l'${YL[H.firstEbe]}`; txt=`L'apport couvre les besoins ${per} et l'activité dégage un bénéfice d'exploitation à partir de l'${YL[H.firstEbe]}.`; }
+  if (H.firstEbe===null){ cls="warn"; ic="!"; title=`Pas encore rentable ${per}`; txt=`Besoin de financement ${per} : ${eur(H.besoin)}, atteint en ${YL[H.besoinY]}. L'activité ne dégage pas encore de bénéfice d'exploitation en ${YL[N]}.`; }
+  else { cls="ok"; ic="✓"; title=`Rentable à partir de l'${YL[H.firstEbe]}`; txt=`Besoin de financement ${per} : ${eur(H.besoin)}, atteint en ${YL[H.besoinY]}. L'activité dégage un bénéfice d'exploitation à partir de l'${YL[H.firstEbe]}.`; }
   v.className="verdict "+cls; v.innerHTML=`<div class="ic" aria-hidden="true">${ic}</div><div><h3>${title}</h3><p>${txt}</p></div>`;
   const k=[
-    ["Apport nécessaire", eur(H.apportNec), S.apport>=H.apportNec?chip("ok",`apport prévu ${keur(S.apport)}`):chip("bad",`apport prévu ${keur(S.apport)}`), `besoin total ${keur(H.besoin)} moins ${keur(S.subv)} de subventions`],
-    [`Trésorerie fin ${YL[N]}`, eur(yN.cash), yN.cash<0?chip("bad","négative"):"", `plus bas : ${eur(H.minCash)} en ${YL[H.minCashY]}`],
+    ["Besoin de financement", eur(H.besoin), "", `au plus bas en ${YL[H.besoinY]}, dont ${keur(R.capex)} d'investissements`],
     [`Chiffre d'affaires ${YL[N]}`, eur(yN.ca), "", `${nf0.format(yN.patients)} patients, ${nf0.format(yN.cures)} cures`],
     [`Résultat net ${YL[N]}`, eur(yN.rn), "", `cumulé ${per} : ${eur(H.cumRn)}`],
     ["Seuil de rentabilité", isFinite(H.srPat)?`${nf0.format(Math.ceil(H.srPat))} patients`:"inatteignable", isFinite(H.srPat)?(yN.patients>=H.srPat?chip("ok",`${nf0.format(yN.patients)} prévus`):chip("warn",`${nf0.format(yN.patients)} prévus`)):chip("bad","prix inférieur au coût"), `par an, aux conditions de l'${YL[N]}`],
@@ -583,7 +574,6 @@ function render(){
     {l:"Autres frais fixes", v:P(o=>-o.fix)},
     {l:"Bénéfice d'exploitation avant amortissements (EBE)", v:P(o=>o.ebe), tot:1},
     {l:"Amortissements des investissements", v:P(o=>-o.dap)},
-    {l:"Quote-part des subventions", v:P(o=>o.repSub)},
     {l:"Impôt sur les sociétés", v:P(o=>-o.is)},
     {l:"Résultat net", v:P(o=>o.rn), tot:1},
     {l:"Marge nette", v:P(o=>o.ca?pct(o.rn/o.ca):"n/a"), pct:1}
@@ -593,21 +583,14 @@ function render(){
     {l:"Argent bloqué en attente de paiement (BFR)", v:P(o=>-o.dBfr)},
     {l:"Investissements", v:P(o=>-o.capex)},
     {l:"Dépôt de garantie du local", v:P(o=>-o.depot)},
-    {l:"Apport en capital", v:P(o=>o.apport)},
-    {l:"Subventions", v:P(o=>o.subv)},
     {l:"Variation de l'année", v:P(o=>o.flux), tot:1},
-    {l:"Trésorerie en fin d'année", v:P(o=>o.cash), tot:1}
+    {l:"Cumul depuis le départ", v:P(o=>o.cash), tot:1}
   ], N);
   const pertes = Math.max(0, H.besoin - R.capex - R.depot);
-  const ress = S.apport + S.subv, marg = ress - H.besoin;
   document.getElementById("fin").innerHTML = `<table><thead><tr><th>Besoins ${per}</th><th>Montant</th></tr></thead><tbody>
     <tr><td>Investissements</td>${cellE(R.capex)}</tr><tr><td>Dépôt de garantie du local</td>${cellE(R.depot)}</tr>
     <tr><td>Pertes du démarrage et paiements en attente, jusqu'au point le plus bas (${YL[H.besoinY]})</td>${cellE(pertes)}</tr>
-    <tr class="tot"><td>Total des besoins</td>${cellE(H.besoin)}</tr></tbody></table>
-    <table style="margin-top:12px"><thead><tr><th>Ressources</th><th>Montant</th></tr></thead><tbody>
-    <tr><td>Apport en capital</td>${cellE(S.apport)}</tr><tr><td>Subventions</td>${cellE(S.subv)}</tr>
-    <tr class="tot"><td>Total des ressources</td>${cellE(ress)}</tr>
-    <tr class="tot"><td>${marg>=0?"Marge de sécurité":"Manque à financer"}</td>${cellE(marg)}</tr></tbody></table>`;
+    <tr class="tot"><td>Besoin de financement</td>${cellE(H.besoin)}</tr></tbody></table>`;
   const pv=(x)=>{ const d=Math.round((x-1)*100); return d===0?"aucun changement":(d>0?`+${d} %`:`${d} %`); };
   document.getElementById("hVol").innerHTML = `Multiplie le nombre de patients de toutes les années. <b>${nf2.format(S.kVol)}</b> : ${pv(S.kVol)}, soit ${nf0.format(yN.patients)} patients en ${YL[N]}.`;
   document.getElementById("hPrix").innerHTML = `Multiplie le prix de vente d'une cure. <b>${nf2.format(S.kPrix)}</b> : ${pv(S.kPrix)}, soit ${eur(y[1].prix)} en An 1.`;
