@@ -212,7 +212,7 @@ td.neg{color:var(--crit-ink)}
         </section>
         <section class="card">
           <h2>Trésorerie en fin d'année</h2>
-          <p class="sub">Avec l'apport des associés et les subventions. Sous zéro, l'apport ne suffit pas.</p>
+          <p class="sub">Avec l'apport et les subventions. Sous zéro, l'apport ne suffit pas.</p>
           <div id="chartCash"></div>
         </section>
       </div>
@@ -236,7 +236,7 @@ td.neg{color:var(--crit-ink)}
         </section>
       </div>
 
-      <p class="note">Hypothèses indicatives à valider : prix et volumes auprès des pharmacies hospitalières, coûts d'aménagement auprès d'un bureau d'études salles propres, taux de remboursement auprès de l'Assurance Maladie. Montants HT, TVA non modélisée. Impôt sur les sociétés : 15 % jusqu'à 42 500 € de bénéfice puis 25 %, avec report des pertes. Aucun emprunt : l'activité est financée par l'apport des associés et les subventions.</p>
+      <p class="note">Hypothèses indicatives à valider : prix et volumes auprès des pharmacies hospitalières, coûts d'aménagement auprès d'un bureau d'études salles propres, taux de remboursement auprès de l'Assurance Maladie. Montants HT, TVA non modélisée. Impôt sur les sociétés : 15 % jusqu'à 42 500 € de bénéfice puis 25 %, avec report des pertes. Aucun emprunt : l'activité est financée par l'apport et les subventions.</p>
     </main>
   </div>
 </div>
@@ -366,7 +366,7 @@ const SECTIONS = [
   {t:"Personnel", items:[
     F("charges","Charges patronales","% du brut","En France, 42 à 47 % pour un salarié cadre.",1),
     F("gSal","Hausse des salaires","% / an","",0.5),
-    {sub:"Pharmacien(ne) responsable (votre associée)"},
+    {sub:"Pharmacienne responsable"},
     F("ph_brut","Salaire brut annuel","€","",1000),
     F("ph_etp","Temps de travail","ETP","",0.1),
     F("ph_m0","Mois payés pendant le montage","mois","Dossier ANSM, travaux et qualification.",1),
@@ -398,7 +398,7 @@ const SECTIONS = [
   ]},
   {t:"Investissements (An 0)", items:[{type:"capex"}]},
   {t:"Financement", items:[
-    F("apport","Apport des associés","€","Argent mis par les associés au départ (ou par des investisseurs).",10000),
+    F("apport","Apport en capital","€","Argent mis dans la société au départ.",10000),
     F("subv","Subventions (Bpifrance, Région)","€","Reçues en An 0, reprises au résultat sur 5 ans.",5000)
   ]},
   {t:"Délais de paiement", items:[
@@ -593,7 +593,7 @@ function render(){
     {l:"Argent bloqué en attente de paiement (BFR)", v:P(o=>-o.dBfr)},
     {l:"Investissements", v:P(o=>-o.capex)},
     {l:"Dépôt de garantie du local", v:P(o=>-o.depot)},
-    {l:"Apport des associés", v:P(o=>o.apport)},
+    {l:"Apport en capital", v:P(o=>o.apport)},
     {l:"Subventions", v:P(o=>o.subv)},
     {l:"Variation de l'année", v:P(o=>o.flux), tot:1},
     {l:"Trésorerie en fin d'année", v:P(o=>o.cash), tot:1}
@@ -605,7 +605,7 @@ function render(){
     <tr><td>Pertes du démarrage et paiements en attente, jusqu'au point le plus bas (${YL[H.besoinY]})</td>${cellE(pertes)}</tr>
     <tr class="tot"><td>Total des besoins</td>${cellE(H.besoin)}</tr></tbody></table>
     <table style="margin-top:12px"><thead><tr><th>Ressources</th><th>Montant</th></tr></thead><tbody>
-    <tr><td>Apport des associés</td>${cellE(S.apport)}</tr><tr><td>Subventions</td>${cellE(S.subv)}</tr>
+    <tr><td>Apport en capital</td>${cellE(S.apport)}</tr><tr><td>Subventions</td>${cellE(S.subv)}</tr>
     <tr class="tot"><td>Total des ressources</td>${cellE(ress)}</tr>
     <tr class="tot"><td>${marg>=0?"Marge de sécurité":"Manque à financer"}</td>${cellE(marg)}</tr></tbody></table>`;
   const pv=(x)=>{ const d=Math.round((x-1)*100); return d===0?"aucun changement":(d>0?`+${d} %`:`${d} %`); };
