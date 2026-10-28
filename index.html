@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+<title>Business plan sérum autologue</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout : établi à deux colonnes, hypothèses à gauche (paillasse), résultats à droite (registre de lot) */
+:root{
+  --bg:#f3f5f6; --panel:#ffffff; --ink:#14202b; --ink-2:#4a5866; --ink-3:#7c8995; --line:#dde3e7; --line-2:#eef1f3;
+  --accent:#b5770f; --accent-soft:#fbf1df; --accent-ink:#7a4f06;
+  --navy:#1d3a52;
+  --good:#0ca30c; --good-ink:#0a7a0a; --warn:#fab219; --warn-ink:#8a5a00; --crit:#d03b3b; --crit-ink:#b02a2a;
+  --s1:#2a78d6; --s2:#eb6834; --pos:#2a78d6; --neg:#e34948; --grid:#e8ecef;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"IBM Plex Sans",-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11171c; --panel:#182128; --ink:#e9eef2; --ink-2:#b3bec7; --ink-3:#85929d; --line:#2a3640; --line-2:#212c34;
+  --accent:#e0a33a; --accent-soft:#2e2615; --accent-ink:#f0c069; --navy:#9cc3e4;
+  --good-ink:#4cd14c; --warn-ink:#f5c04a; --crit-ink:#f07a7a;
+  --s1:#3987e5; --s2:#d95926; --pos:#3987e5; --neg:#e66767; --grid:#26323b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11171c; --panel:#182128; --ink:#e9eef2; --ink-2:#b3bec7; --ink-3:#85929d; --line:#2a3640; --line-2:#212c34;
+  --accent:#e0a33a; --accent-soft:#2e2615; --accent-ink:#f0c069; --navy:#9cc3e4;
+  --good-ink:#4cd14c; --warn-ink:#f5c04a; --crit-ink:#f07a7a;
+  --s1:#3987e5; --s2:#d95926; --pos:#3987e5; --neg:#e66767; --grid:#26323b; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1440px;margin:0 auto}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:18px}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(24px,3.2vw,34px);margin:2px 0 4px;text-wrap:balance;color:var(--ink)}
+.lede{color:var(--ink-2);margin:0;max-width:70ch}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:7px 12px;font-weight:500}
+.btn:hover{border-color:var(--ink-3)}
+.btn:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid{display:grid;grid-template-columns:minmax(320px,390px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:960px){.grid{grid-template-columns:1fr}}
+/* panneau hypothèses */
+aside.inputs{background:var(--panel);border:1px solid var(--line);border-radius:10px;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+@media (max-width:960px){aside.inputs{position:static;max-height:none}}
+.inputs-head{padding:14px 16px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:2}
+.inputs-head h2{font-family:var(--f-display);font-size:17px;margin:0}
+.inputs-head p{margin:2px 0 0;color:var(--ink-3);font-size:12.5px}
+.modcount{font-family:var(--f-mono);font-size:11.5px;color:var(--accent-ink)}
+details.sec{border-bottom:1px solid var(--line-2)}
+details.sec>summary{list-style:none;padding:11px 16px;font-family:var(--f-display);font-weight:600;font-size:14.5px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::after{content:"+";font-family:var(--f-mono);color:var(--ink-3)}
+details.sec[open]>summary::after{content:"−"}
+.sec-body{padding:2px 16px 14px;display:grid;gap:10px}
+.f{display:grid;gap:3px}
+.f-row{display:flex;align-items:center;gap:8px}
+.f label{font-size:13px;font-weight:500;color:var(--ink);flex:1;min-width:0}
+.inp{display:flex;align-items:center;border:1px solid var(--line);border-radius:6px;background:var(--bg);overflow:hidden}
+.inp input{width:96px;border:0;background:transparent;color:var(--ink);font-family:var(--f-mono);font-size:13px;padding:5px 6px;text-align:right}
+.inp .u{font-size:11.5px;color:var(--ink-3);padding:0 7px 0 2px;white-space:nowrap}
+.f.mod .inp{border-color:var(--accent);background:var(--accent-soft)}
+.reset{border:0;background:none;color:var(--accent-ink);font-size:12px;padding:0 2px;visibility:hidden}
+.f.mod .reset{visibility:visible}
+.hint{font-size:11.5px;color:var(--ink-3);line-height:1.35}
+.years{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.years .inp input{width:100%;text-align:center;padding:5px 2px}
+.years .yl{font-family:var(--f-mono);font-size:10.5px;color:var(--ink-3);text-align:center}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center}
+.pair .inp input{width:84px}.pair .inp.small input{width:38px}
+.loan{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.loan .inp input{width:100%}
+.subhead{font-size:12px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+/* résultats */
+main{min-width:0;display:grid;gap:18px}
+.scen{display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.scen .lab{font-family:var(--f-display);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink-2);padding:6px 12px;font-weight:500}
+.seg button[aria-pressed="true"]{background:var(--navy);color:var(--panel)}
+.coef{display:flex;flex-wrap:wrap;gap:10px;margin-left:auto}
+.coef .inp input{width:52px}
+.coef label{font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.verdict{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:10px;border:1px solid var(--line);background:var(--panel)}
+.verdict .ic{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;font-size:14px}
+.verdict.ok .ic{background:var(--good)}.verdict.warn .ic{background:var(--warn);color:#3b2a00}.verdict.bad .ic{background:var(--crit)}
+.verdict h3{margin:0 0 2px;font-family:var(--f-display);font-size:16px}
+.verdict p{margin:0;color:var(--ink-2)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:3px;align-content:start}
+.kpi .k{font-size:12px;color:var(--ink-2)}
+.kpi .v{font-family:var(--f-display);font-weight:700;font-size:23px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.kpi .s{font-size:11.5px;color:var(--ink-3)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;border-radius:999px;padding:1px 8px;width:max-content}
+.chip.ok{color:var(--good-ink);background:color-mix(in srgb,var(--good) 14%,transparent)}
+.chip.warn{color:var(--warn-ink);background:color-mix(in srgb,var(--warn) 18%,transparent)}
+.chip.bad{color:var(--crit-ink);background:color-mix(in srgb,var(--crit) 14%,transparent)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.card h2{font-family:var(--f-display);font-size:17px;margin:0 0 2px}
+.card .sub{color:var(--ink-3);font-size:12.5px;margin:0 0 10px}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:1180px){.two{grid-template-columns:1fr}}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-bottom:4px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+svg text{font-family:var(--f-mono);font-size:10.5px;fill:var(--ink-3)}
+.chart{width:100%;height:auto;display:block}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:5px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line-2)}
+th:first-child,td:first-child{text-align:left;white-space:normal;min-width:190px}
+thead th{font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line)}
+td{font-family:var(--f-mono);font-size:12.5px}
+td:first-child{font-family:var(--f-body);font-size:13px}
+tr.tot td{font-weight:600;border-top:1px solid var(--line);background:var(--line-2)}
+tr.tot td:first-child{font-weight:600}
+tr.pct td{color:var(--ink-3);font-size:11.5px}
+td.neg{color:var(--crit-ink)}
+.unit{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.unit div{border-left:2px solid var(--line);padding-left:10px}
+.unit b{display:block;font-family:var(--f-display);font-size:19px;font-variant-numeric:tabular-nums}
+.unit span{font-size:12px;color:var(--ink-2)}
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:6px;z-index:50;font-family:var(--f-mono);line-height:1.4;white-space:nowrap}
+.note{font-size:12px;color:var(--ink-3);max-width:90ch}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:13px;z-index:60}
+@media (prefers-reduced-motion:no-preference){.kpi .v,.verdict{transition:color .2s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Projet collyre au sérum autologue · Côte d'Azur</div>
+      <h1>Business plan sur 5 ans</h1>
+      <p class="lede">Établissement pharmaceutique fabricant, sous-traitant des pharmacies hospitalières et des officines. Toutes les hypothèses sont pré-remplies : modifiez-les à gauche, les résultats se recalculent aussitôt.</p>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="copyCsv" type="button">Copier les tableaux (CSV)</button>
+      <button class="btn" id="resetAll" type="button">Revenir aux valeurs par défaut</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <aside class="inputs" aria-label="Hypothèses">
+      <div class="inputs-head">
+        <h2>Hypothèses</h2>
+        <p>Valeurs HT. Un champ modifié passe en ambre ; ↺ le remet à sa valeur par défaut. <span class="modcount" id="modcount"></span></p>
+      </div>
+      <div id="form"></div>
+    </aside>
+
+    <main>
+      <div class="scen">
+        <span class="lab">Scénario</span>
+        <div class="seg" role="group" aria-label="Scénario">
+          <button type="button" data-scen="pess">Pessimiste</button>
+          <button type="button" data-scen="real">Réaliste</button>
+          <button type="button" data-scen="opti">Optimiste</button>
+        </div>
+        <div class="coef">
+          <label for="kVol">Volumes ×<span class="inp"><input id="kVol" type="number" step="0.05"></span></label>
+          <label for="kPrix">Prix ×<span class="inp"><input id="kPrix" type="number" step="0.05"></span></label>
+          <label for="kCapex">Investissements ×<span class="inp"><input id="kCapex" type="number" step="0.05"></span></label>
+        </div>
+      </div>
+
+      <div class="verdict" id="verdict"></div>
+      <div class="kpis" id="kpis"></div>
+
+      <div class="two">
+        <section class="card">
+          <h2>Chiffre d'affaires et charges</h2>
+          <p class="sub">Charges totales = coûts variables, personnel, loyer, frais fixes, amortissements et intérêts.</p>
+          <div class="legend"><span><i style="background:var(--s1)"></i>Chiffre d'affaires</span><span><i style="background:var(--s2)"></i>Charges totales</span></div>
+          <div id="chartCA"></div>
+        </section>
+        <section class="card">
+          <h2>Trésorerie en fin d'année</h2>
+          <p class="sub">Après apports, subvention et emprunts. Sous zéro, il manque du financement.</p>
+          <div id="chartCash"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Économie d'une cure</h2>
+        <p class="sub">Une cure = un prélèvement transformé en environ 3 mois de collyre pour un patient.</p>
+        <div class="unit" id="unit"></div>
+      </section>
+
+      <section class="card">
+        <h2>Compte de résultat prévisionnel</h2>
+        <p class="sub">An 0 = montage (travaux, qualification, dossier ANSM), sans vente.</p>
+        <div class="tbl" id="pl"></div>
+      </section>
+
+      <section class="card">
+        <h2>Plan de trésorerie</h2>
+        <p class="sub">Flux annuels et trésorerie cumulée.</p>
+        <div class="tbl" id="cash"></div>
+      </section>
+
+      <div class="two">
+        <section class="card">
+          <h2>Plan de financement initial</h2>
+          <p class="sub">Besoins au pic de trésorerie face aux ressources prévues.</p>
+          <div class="tbl" id="fin"></div>
+        </section>
+        <section class="card">
+          <h2>Sensibilité de la VAN</h2>
+          <p class="sub">Effet d'une variation de ±20 % de chaque hypothèse, toutes choses égales par ailleurs.</p>
+          <div class="legend"><span><i style="background:var(--neg)"></i>VAN en baisse</span><span><i style="background:var(--pos)"></i>VAN en hausse</span></div>
+          <div id="chartTornado"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <h2>Ratios et effectifs</h2>
+        <p class="sub">DSCR = (EBE − impôt) / (intérêts + remboursements). Les banques attendent en général au moins 1,2.</p>
+        <div class="tbl" id="ratios"></div>
+      </section>
+
+      <p class="note">Hypothèses indicatives à valider : prix et volumes auprès des pharmacies hospitalières (lettres d'intention), coûts d'aménagement auprès d'un bureau d'études salles propres, conditions réglementaires auprès de l'ANSM. Montants HT, TVA non modélisée. IS : 15 % jusqu'à 42 500 € de bénéfice puis 25 %, avec report des déficits. Amortissement linéaire à partir de l'An 1.</p>
+    </main>
+  </div>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+/*ENGINE-START*/
+const D = {
+  kVol:1, kPrix:1, kCapex:1,
+  pat1:120, pat2:260, pat3:400, pat4:520, pat5:620,
+  curesPat:3, prix:620, gPrix:2, perte:3,
+  cv_conso:45, cv_cq:70, cv_tra:35, cv_trr:45, cv_prel:25, cv_emb:12, cv_dech:4, infl:2.5,
+  charges:45, gSal:2,
+  ph_brut:52000, ph_etp:1, ph_m0:6,
+  int_brut:60000, int_etp:0.2,
+  tech_brut:30000, tech_cap:700, tech_m0:3,
+  qa_brut:32000, qa_etp:0.5,
+  surf:100, loyerM2:220, chLoc:25, loyM0:9,
+  f_assur:9000, f_maint:18000, f_env:7000, f_energie:9000, f_compta:14000, f_logi:6000, f_comm:10000, f_div:5000, fixM0:30,
+  cx_amen:130000, cxd_amen:10, cx_iso:120000, cxd_iso:7, cx_centri:18000, cxd_centri:5, cx_froid:30000, cxd_froid:5,
+  cx_mat:22000, cxd_mat:5, cx_info:12000, cxd_info:3, cx_qualif:45000, cxd_qualif:5, cx_conseil:55000, cxd_conseil:5,
+  apport:250000, subv:100000,
+  bk_a:500000, bk_r:4.8, bk_n:8, bk_d:2,
+  bpi_a:250000, bpi_r:3, bpi_n:7, bpi_d:2,
+  ho_a:50000, ho_r:0, ho_n:5, ho_d:2,
+  dso:60, dpo:30, stock:30, wacc:10, tvMult:5
+};
+const CAPEX = [["amen","Aménagement zone propre (cloisons, sas, ventilation)"],["iso","Isolateur stérile classe A"],["centri","Centrifugeuses réfrigérées"],["froid","Congélateurs, réfrigérateurs, suivi des températures"],["mat","Petit matériel, remplissage, étiquetage"],["info","Informatique et logiciels"],["qualif","Qualification initiale et validation du procédé"],["conseil","Conseil réglementaire, dossier ANSM, juridique"]];
+const CV = ["cv_conso","cv_cq","cv_tra","cv_trr","cv_prel","cv_emb","cv_dech"];
+const FIX = ["f_assur","f_maint","f_env","f_energie","f_compta","f_logi","f_comm","f_div"];
+const Y = [0,1,2,3,4,5];
+
+function loanSchedule(A, ratePct, n, d){
+  const r = ratePct/100, out = Y.map(()=>({int:0,princ:0,bal:0}));
+  let bal = A; const m = Math.max(1, n - d);
+  const ann = A<=0 ? 0 : (r===0 ? A/m : A*r/(1-Math.pow(1+r,-m)));
+  for (const t of Y){
+    if (bal <= 0.005){ out[t].bal = 0; continue; }
+    const it = bal*r; let p = 0;
+    if (t >= d && t < n) p = Math.min(bal, ann - it);
+    bal -= p; out[t] = {int:it, princ:p, bal:Math.max(0,bal)};
+  }
+  return out;
+}
+function isTax(base){ if (base<=0) return 0; return 0.15*Math.min(base,42500) + 0.25*Math.max(0,base-42500); }
+
+function compute(S){
+  const R = {y:[]};
+  const cvBase = CV.reduce((a,k)=>a+S[k],0);
+  const fixBase = FIX.reduce((a,k)=>a+S[k],0);
+  const capItems = CAPEX.map(([k,l])=>({k,l,a:S["cx_"+k]*S.kCapex,d:Math.max(1,S["cxd_"+k])}));
+  const capex = capItems.reduce((a,c)=>a+c.a,0);
+  const loyerAn = S.surf*S.loyerM2*(1+S.chLoc/100);
+  const depot = S.surf*S.loyerM2/4;
+  const loans = [loanSchedule(S.bk_a,S.bk_r,S.bk_n,S.bk_d), loanSchedule(S.bpi_a,S.bpi_r,S.bpi_n,S.bpi_d), loanSchedule(S.ho_a,S.ho_r,S.ho_n,S.ho_d)];
+  const loanTot = S.bk_a+S.bpi_a+S.ho_a;
+  const cc = 1+S.charges/100;
+  let deficit = 0, cash = 0, prevBFR = 0, cumRN = 0;
+  for (const t of Y){
+    const o = {t};
+    const sal = Math.pow(1+S.gSal/100, Math.max(0,t-1));
+    const inf = Math.pow(1+S.infl/100, Math.max(0,t-1));
+    o.patients = t===0 ? 0 : S["pat"+t]*S.kVol;
+    o.cures = o.patients*S.curesPat;
+    o.produced = o.cures/(1-S.perte/100);
+    o.prix = t===0 ? 0 : S.prix*S.kPrix*Math.pow(1+S.gPrix/100,t-1);
+    o.cvUnit = cvBase*inf;
+    o.ca = o.cures*o.prix;
+    o.cv = t===0 ? 0 : o.produced*o.cvUnit;
+    o.mb = o.ca - o.cv;
+    // personnel
+    o.nTech = t===0 ? 1 : Math.max(1, Math.ceil(o.produced/Math.max(1,S.tech_cap)));
+    const f0 = (m)=> t===0 ? m/12 : 1;
+    o.sPh = S.ph_brut*S.ph_etp*cc*sal*f0(S.ph_m0);
+    o.sInt = t===0 ? 0 : S.int_brut*S.int_etp*cc*sal;
+    o.sTech = S.tech_brut*o.nTech*cc*sal*f0(S.tech_m0);
+    o.sQa = t===0 ? 0 : S.qa_brut*S.qa_etp*cc*sal;
+    o.pers = o.sPh+o.sInt+o.sTech+o.sQa;
+    o.etp = t===0 ? 0 : S.ph_etp+S.int_etp+o.nTech+S.qa_etp;
+    o.loyer = loyerAn*inf*(t===0 ? S.loyM0/12 : 1);
+    o.fix = fixBase*inf*(t===0 ? S.fixM0/100 : 1);
+    o.ebe = o.mb - o.pers - o.loyer - o.fix;
+    o.dap = t===0 ? 0 : capItems.reduce((a,c)=> a + (t<=c.d ? c.a/c.d : 0), 0);
+    o.rex = o.ebe - o.dap;
+    o.int = loans.reduce((a,l)=>a+l[t].int,0);
+    o.princ = loans.reduce((a,l)=>a+l[t].princ,0);
+    o.debt = loans.reduce((a,l)=>a+l[t].bal,0);
+    o.repSub = t===0 ? 0 : S.subv/5;
+    o.rcai = o.rex - o.int + o.repSub;
+    let base = o.rcai;
+    if (base < 0){ deficit += -base; base = 0; } else { const use = Math.min(deficit, base); deficit -= use; base -= use; }
+    o.is = isTax(base);
+    o.rn = o.rcai - o.is;
+    cumRN += o.rn;
+    o.caf = o.rn + o.dap - o.repSub;
+    o.bfr = o.ca*S.dso/365 + o.cv*S.stock/365 - (o.cv + o.fix)*S.dpo/365;
+    o.dBfr = o.bfr - prevBFR; prevBFR = o.bfr;
+    o.capex = t===0 ? capex : 0;
+    o.depot = t===0 ? depot : 0;
+    o.apport = t===0 ? S.apport : 0;
+    o.subv = t===0 ? S.subv : 0;
+    o.emprunts = t===0 ? loanTot : 0;
+    o.fluxOp = o.caf - o.dBfr;
+    o.flux = o.fluxOp - o.capex - o.depot + o.apport + o.subv + o.emprunts - o.princ;
+    cash += o.flux; o.cash = cash;
+    o.fcf = o.ebe - o.is - o.dBfr - o.capex - o.depot;     // flux projet (hors financement)
+    o.ds = o.int + o.princ;
+    o.dscr = (t>0 && o.ds>0) ? (o.ebe - o.is)/o.ds : null;
+    o.equity = S.apport + cumRN + (S.subv - (t===0?0:S.subv/5*t));
+    o.gearing = o.equity>0 ? o.debt/o.equity : null;
+    o.charges = o.cv + o.pers + o.loyer + o.fix + o.dap + o.int;
+    R.y.push(o);
+  }
+  const y = R.y;
+  R.capex = capex; R.capItems = capItems; R.depot = depot; R.loanTot = loanTot;
+  R.ressources = S.apport + S.subv + loanTot;
+  // besoin de financement : creux du cumul des flux hors financement externe (intérêts et remboursements inclus)
+  let c = 0, minC = 0, minY = 0;
+  for (const o of y){ c += o.flux - o.apport - o.subv - o.emprunts; if (c < minC){ minC = c; minY = o.t; } }
+  R.besoin = -minC; R.besoinY = minY;
+  let mc = Infinity, mcy = 0; for (const o of y){ if (o.cash < mc){ mc = o.cash; mcy = o.t; } }
+  R.minCash = mc; R.minCashY = mcy;
+  R.firstEbe = (y.find(o=>o.t>0 && o.ebe>0)||{}).t ?? null;
+  R.firstRn = (y.find(o=>o.t>0 && o.rn>0)||{}).t ?? null;
+  // VAN / TRI
+  const r = S.wacc/100;
+  const tv = Math.max(0, y[5].ebe*S.tvMult);
+  const flows = y.map(o=>o.fcf); flows[5] += tv;
+  R.tv = tv;
+  R.van = flows.reduce((a,f,i)=>a+f/Math.pow(1+r,i),0);
+  R.tri = irr(flows);
+  // délai de récupération (sans valeur terminale)
+  let cum = 0; R.payback = null;
+  for (let i=0;i<6;i++){ const prev = cum; cum += y[i].fcf; if (cum >= 0 && i>0 && prev < 0){ R.payback = (i-1) + (-prev)/(y[i].fcf); break; } }
+  // seuil de rentabilité aux conditions de l'An 3
+  const y3 = y[3];
+  const mcv = y3.prix - y3.cvUnit/(1-S.perte/100);
+  const fixes3 = y3.pers + y3.loyer + y3.fix + y3.dap + y3.int - y3.repSub;
+  R.srCures = mcv>0 ? fixes3/mcv : Infinity;
+  R.srPat = R.srCures/S.curesPat;
+  R.mcvUnit3 = mcv;
+  const dscrs = y.filter(o=>o.t>=3 && o.dscr!==null).map(o=>o.dscr);
+  R.dscrMin = dscrs.length ? Math.min(...dscrs) : null;
+  R.dscrMinY = R.dscrMin===null ? null : y.find(o=>o.t>=3 && o.dscr===R.dscrMin).t;
+  return R;
+}
+function irr(f){
+  const npv = (r)=>f.reduce((a,v,i)=>a+v/Math.pow(1+r,i),0);
+  let lo=-0.95, hi=3, flo=npv(lo), fhi=npv(hi);
+  if (isNaN(flo)||isNaN(fhi)||flo*fhi>0) return null;
+  for (let i=0;i<200;i++){ const m=(lo+hi)/2, fm=npv(m); if (Math.abs(fm)<1e-6) return m; if (flo*fm<0){hi=m;fhi=fm;} else {lo=m;flo=fm;} }
+  return (lo+hi)/2;
+}
+/*ENGINE-END*/
+
+/* ---------- formulaire ---------- */
+const F = (id,label,unit,hint,step)=>({id,label,unit,hint,step});
+const SECTIONS = [
+  {t:"Activité et prix", open:true, items:[
+    {type:"years", label:"Patients suivis par an", hint:"Montée en charge : Côte d'Azur d'abord, puis PUI d'autres régions (expédition congelée). À recouper avec les lettres d'intention."},
+    F("curesPat","Cures par patient et par an","cures","Une cure ≈ 3 mois de traitement. Les patients chroniques en font 4, d'autres 1 ou 2.",0.5),
+    F("prix","Prix de vente d'une cure","€ HT","Hypothèse à valider auprès des pharmacies hospitalières. Comparer au coût complet actuel d'une PUI.",10),
+    F("gPrix","Hausse annuelle du prix","%","",0.5),
+    F("perte","Lots non conformes ou refaits","%","Lots perdus (stérilité, prélèvement insuffisant). Leur coût est supporté, sans facturation.",0.5)
+  ]},
+  {t:"Coûts variables par cure", items:[
+    F("cv_conso","Consommables stériles","€","Tubes, flacons ou unidoses, filtres, sérum physiologique.",1),
+    F("cv_cq","Contrôles qualité du lot","€","Stérilité et contrôles de libération, souvent sous-traités à un laboratoire.",1),
+    F("cv_tra","Transport aller du sang","€","Température dirigée, du lieu de prélèvement au site.",1),
+    F("cv_trr","Transport retour du collyre","€","Expédition congelée (glace carbonique).",1),
+    F("cv_prel","Prélèvement refacturé","€","Si l'EFS ou l'établissement facture le prélèvement. Mettre 0 si c'est le client qui le prend en charge.",1),
+    F("cv_emb","Emballages et étiquettes","€","",1),
+    F("cv_dech","Déchets à risque infectieux","€","",1),
+    F("infl","Inflation des coûts","% / an","S'applique aux coûts variables, au loyer et aux frais fixes.",0.5)
+  ]},
+  {t:"Personnel", items:[
+    F("charges","Charges patronales","% du brut","En France, 42 à 47 % pour un salarié cadre.",1),
+    F("gSal","Hausse des salaires","% / an","",0.5),
+    {sub:"Pharmacien(ne) responsable (votre associée)"},
+    F("ph_brut","Salaire brut annuel","€","",1000),
+    F("ph_etp","Temps de travail","ETP","",0.1),
+    F("ph_m0","Mois payés pendant le montage","mois","Présence pour le dossier ANSM, les travaux et la qualification.",1),
+    {sub:"Pharmacien responsable intérimaire"},
+    F("int_brut","Salaire brut annuel (temps plein)","€","Obligatoire pour remplacer le pharmacien responsable.",1000),
+    F("int_etp","Temps de travail","ETP","",0.05),
+    {sub:"Technicien(ne)s de production"},
+    F("tech_brut","Salaire brut annuel","€","",1000),
+    F("tech_cap","Capacité par technicien","cures / an","≈ 2 h par cure (réception, préparation, documentation) sur 1 400 h productives. Le nombre de techniciens suit le volume.",50),
+    F("tech_m0","Mois payés pendant le montage","mois","Formation et validation du procédé.",1),
+    {sub:"Assistant(e) qualité et administration"},
+    F("qa_brut","Salaire brut annuel (temps plein)","€","",1000),
+    F("qa_etp","Temps de travail","ETP","",0.1)
+  ]},
+  {t:"Local et frais fixes", items:[
+    F("surf","Surface louée","m²","Sas, zone propre avec isolateur, zone froid, stockage, bureau.",5),
+    F("loyerM2","Loyer","€ HT / m² / an","Annonces de laboratoires à Sophia Antipolis : environ 220 €.",5),
+    F("chLoc","Charges locatives","% du loyer","",1),
+    F("loyM0","Mois de loyer pendant le montage","mois","12 moins la franchise négociée pendant les travaux.",1),
+    F("f_assur","Assurances (RC produit, locaux)","€ / an","",500),
+    F("f_maint","Maintenance, requalification, métrologie","€ / an","Requalification annuelle de l'isolateur et de la ventilation.",500),
+    F("f_env","Surveillance de l'environnement","€ / an","Comptage particulaire et prélèvements microbiologiques.",500),
+    F("f_energie","Énergie (ventilation, froid)","€ / an","",500),
+    F("f_compta","Comptable, juridique, audits","€ / an","",500),
+    F("f_logi","Logiciels qualité et traçabilité","€ / an","",500),
+    F("f_comm","Commercial, déplacements, congrès","€ / an","",500),
+    F("f_div","Cotisations, taxes et divers","€ / an","",500),
+    F("fixM0","Part des frais fixes payée pendant le montage","%","",5)
+  ]},
+  {t:"Investissements (An 0)", items:[{type:"capex"}]},
+  {t:"Financement", items:[
+    F("apport","Apport des associés","€","",5000),
+    F("subv","Subventions (Bpifrance, Région)","€","Reçues en An 0, reprises au résultat sur 5 ans.",5000),
+    {type:"loan", p:"bk", label:"Prêt bancaire"},
+    {type:"loan", p:"bpi", label:"Prêt Bpifrance"},
+    {type:"loan", p:"ho", label:"Prêt d'honneur"}
+  ]},
+  {t:"Paramètres financiers", items:[
+    F("dso","Délai de paiement des clients","jours","Hôpitaux publics : 50 jours légaux, souvent dépassés.",5),
+    F("dpo","Délai de paiement des fournisseurs","jours","",5),
+    F("stock","Stock de consommables","jours de coûts variables","",5),
+    F("wacc","Taux d'actualisation (VAN)","%","Rendement exigé pour un projet de ce risque.",0.5),
+    F("tvMult","Valeur de revente en fin d'An 5","× l'EBE","Valeur terminale incluse dans la VAN et le TRI. Mettre 0 pour l'exclure.",0.5)
+  ]}
+];
+
+let S = {...D};
+try { const s = JSON.parse(localStorage.getItem("bp-serum-v1")||"null"); if (s) for (const k in D) if (typeof s[k]==="number" && isFinite(s[k])) S[k]=s[k]; } catch(e){}
+function save(){ try{ localStorage.setItem("bp-serum-v1", JSON.stringify(S)); }catch(e){} }
+
+const esc = (s)=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function numInput(id, unit, step, cls=""){
+  return `<span class="inp ${cls}"><input id="${id}" data-k="${id}" type="number" inputmode="decimal" step="${step||1}" value="${S[id]}">${unit?`<span class="u">${esc(unit)}</span>`:""}</span>`;
+}
+function buildForm(){
+  let h = "";
+  for (const sec of SECTIONS){
+    h += `<details class="sec"${sec.open?" open":""}><summary>${esc(sec.t)}</summary><div class="sec-body">`;
+    for (const it of sec.items){
+      if (it.sub){ h += `<div class="subhead">${esc(it.sub)}</div>`; continue; }
+      if (it.type==="years"){
+        h += `<div class="f" data-f="pat1 pat2 pat3 pat4 pat5"><div class="f-row"><label>${esc(it.label)}</label><button class="reset" type="button" data-reset="pat1 pat2 pat3 pat4 pat5" aria-label="Valeur par défaut">↺</button></div><div class="years">`;
+        for (let i=1;i<=5;i++) h += `<div><div class="yl">An ${i}</div>${numInput("pat"+i,"",10)}</div>`;
+        h += `</div><div class="hint">${esc(it.hint)}</div></div>`; continue;
+      }
+      if (it.type==="capex"){
+        h += `<div class="hint">Montant (€ HT) et durée d'amortissement (ans).</div>`;
+        for (const [k,l] of CAPEX){
+          const a="cx_"+k, d="cxd_"+k;
+          h += `<div class="f" data-f="${a} ${d}"><div class="pair"><label for="${a}">${esc(l)}</label>${numInput(a,"€",1000)}${numInput(d,"ans",1,"small")}</div><button class="reset" type="button" data-reset="${a} ${d}" style="justify-self:end">↺ défaut</button></div>`;
+        }
+        h += `<div class="hint">Le coefficient « Investissements » du scénario s'applique à ces montants.</div>`;
+        continue;
+      }
+      if (it.type==="loan"){
+        const p=it.p, ks=[p+"_a",p+"_r",p+"_n",p+"_d"];
+        h += `<div class="f" data-f="${ks.join(" ")}"><div class="f-row"><label>${esc(it.label)}</label><button class="reset" type="button" data-reset="${ks.join(" ")}" aria-label="Valeur par défaut">↺</button></div><div class="loan">${numInput(ks[0],"€",5000)}${numInput(ks[1],"% / an",0.1)}${numInput(ks[2],"ans au total",1)}${numInput(ks[3],"ans de différé",1)}</div></div>`;
+        continue;
+      }
+      h += `<div class="f" data-f="${it.id}"><div class="f-row"><label for="${it.id}">${esc(it.label)}</label>${numInput(it.id,it.unit,it.step)}<button class="reset" type="button" data-reset="${it.id}" aria-label="Valeur par défaut">↺</button></div>${it.hint?`<div class="hint">${esc(it.hint)}</div>`:""}</div>`;
+    }
+    h += `</div></details>`;
+  }
+  document.getElementById("form").innerHTML = h;
+}
+function syncInputs(){
+  document.querySelectorAll("input[data-k]").forEach(i=>{ if (document.activeElement!==i) i.value = +(+S[i.dataset.k]).toFixed(4); });
+  let n=0;
+  document.querySelectorAll(".f[data-f]").forEach(f=>{ const mod = f.dataset.f.split(" ").some(k=>S[k]!==D[k]); f.classList.toggle("mod",mod); });
+  for (const k in D) if (!["kVol","kPrix","kCapex"].includes(k) && S[k]!==D[k]) n++;
+  document.getElementById("modcount").textContent = n ? `${n} hypothèse${n>1?"s":""} modifiée${n>1?"s":""}.` : "";
+}
+
+/* ---------- formats ---------- */
+const nf0 = new Intl.NumberFormat("fr-FR",{maximumFractionDigits:0});
+const nf1 = new Intl.NumberFormat("fr-FR",{maximumFractionDigits:1,minimumFractionDigits:1});
+const eur = (v)=> nf0.format(Math.round(v)) + " €";
+const keur = (v)=> (Math.abs(v)>=1e6 ? nf1.format(v/1e6)+" M€" : nf0.format(Math.round(v/1000))+" k€");
+const pct = (v)=> v===null||!isFinite(v) ? "n/a" : nf1.format(v*100)+" %";
+const cellE = (v)=> `<td class="${v<-0.5?"neg":""}">${nf0.format(Math.round(v)||0)}</td>`;
+const YL = ["An 0","An 1","An 2","An 3","An 4","An 5"];
+
+/* ---------- graphiques (SVG) ---------- */
+function nice(min,max,count=5){
+  if (min===max){ max=min+1; }
+  const span=max-min, step0=span/count, mag=Math.pow(10,Math.floor(Math.log10(step0)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>span/s<=count) || 10*mag;
+  const lo=Math.floor(min/step)*step, hi=Math.ceil(max/step)*step, ticks=[];
+  for (let v=lo; v<=hi+step/2; v+=step) ticks.push(+v.toFixed(6));
+  return {lo,hi,ticks};
+}
+const tip = document.getElementById("tip");
+function showTip(e,html){ tip.innerHTML=html; tip.hidden=false; const w=tip.offsetWidth, h=tip.offsetHeight; let x=e.clientX+14, yy=e.clientY-h-10; if (x+w>innerWidth-8) x=e.clientX-w-14; if (yy<8) yy=e.clientY+16; tip.style.left=x+"px"; tip.style.top=yy+"px"; }
+function hideTip(){ tip.hidden=true; }
+
+function barChart(el, series){
+  const W=620,H=260,m={l:56,r:10,t:10,b:26};
+  const all=series.flatMap(s=>s.v); const sc=nice(Math.min(0,...all),Math.max(0,...all));
+  const yv=(v)=>m.t+(H-m.t-m.b)*(1-(v-sc.lo)/(sc.hi-sc.lo));
+  const gw=(W-m.l-m.r)/6, bw=Math.min(22,(gw-14)/series.length);
+  let g="";
+  for (const t of sc.ticks){ g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yv(t)}" y2="${yv(t)}" stroke="var(--grid)" stroke-width="1"/><text x="${m.l-6}" y="${yv(t)+3.5}" text-anchor="end">${keur(t)}</text>`; }
+  let bars="";
+  for (let i=0;i<6;i++){
+    const cx=m.l+gw*i+gw/2, x0=cx-(bw*series.length+2*(series.length-1))/2;
+    series.forEach((s,j)=>{
+      const v=s.v[i], y1=yv(Math.max(0,v)), y2=yv(Math.min(0,v)), h=Math.max(0,y2-y1), x=x0+j*(bw+2), r=Math.min(4,h/2,bw/2);
+      const path = v>=0 ? `M${x},${y2}V${y1+r}Q${x},${y1} ${x+r},${y1}H${x+bw-r}Q${x+bw},${y1} ${x+bw},${y1+r}V${y2}Z` : `M${x},${y1}V${y2-r}Q${x},${y2} ${x+r},${y2}H${x+bw-r}Q${x+bw},${y2} ${x+bw},${y2-r}V${y1}Z`;
+      bars+=`<path d="${path}" fill="${s.c}"/>`;
+    });
+    g+=`<text x="${cx}" y="${H-8}" text-anchor="middle">${YL[i]}</text>`;
+    bars+=`<rect x="${m.l+gw*i}" y="${m.t}" width="${gw}" height="${H-m.t-m.b}" fill="transparent" data-i="${i}"/>`;
+  }
+  g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yv(0)}" y2="${yv(0)}" stroke="var(--ink-3)" stroke-width="1"/>`;
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Chiffre d'affaires et charges par année">${g}${bars}</svg>`;
+  el.querySelectorAll("rect[data-i]").forEach(r=>{ const i=+r.dataset.i;
+    r.addEventListener("pointermove",e=>showTip(e,`<b>${YL[i]}</b><br>`+series.map(s=>`${s.n} : ${eur(s.v[i])}`).join("<br>")));
+    r.addEventListener("pointerleave",hideTip); });
+}
+function lineChart(el, v){
+  const W=620,H=260,m={l:56,r:16,t:14,b:26};
+  const sc=nice(Math.min(0,...v),Math.max(0,...v));
+  const xv=(i)=>m.l+(W-m.l-m.r)*i/5, yv=(x)=>m.t+(H-m.t-m.b)*(1-(x-sc.lo)/(sc.hi-sc.lo));
+  let g="";
+  for (const t of sc.ticks){ g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yv(t)}" y2="${yv(t)}" stroke="var(--grid)"/><text x="${m.l-6}" y="${yv(t)+3.5}" text-anchor="end">${keur(t)}</text>`; }
+  for (let i=0;i<6;i++) g+=`<text x="${xv(i)}" y="${H-8}" text-anchor="middle">${YL[i]}</text>`;
+  const pts=v.map((x,i)=>[xv(i),yv(x)]);
+  const line="M"+pts.map(p=>p.join(",")).join("L");
+  const area=line+`L${xv(5)},${yv(0)}L${xv(0)},${yv(0)}Z`;
+  let mi=0; v.forEach((x,i)=>{ if (x<v[mi]) mi=i; });
+  g+=`<path d="${area}" fill="var(--s1)" fill-opacity=".12"/>`;
+  g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${yv(0)}" y2="${yv(0)}" stroke="var(--ink-3)"/>`;
+  g+=`<path d="${line}" fill="none" stroke="var(--s1)" stroke-width="2"/>`;
+  pts.forEach((p,i)=>{ const neg=v[i]<0; g+=`<circle cx="${p[0]}" cy="${p[1]}" r="${i===mi?5:4}" fill="${neg?"var(--neg)":"var(--s1)"}" stroke="var(--panel)" stroke-width="2"/>`; });
+  g+=`<text x="${pts[mi][0]}" y="${pts[mi][1]+(v[mi]<0?18:-10)}" text-anchor="middle" style="fill:var(--ink-2)">min ${keur(v[mi])}</text>`;
+  g+=`<line id="xh" x1="0" x2="0" y1="${m.t}" y2="${H-m.b}" stroke="var(--ink-3)" stroke-dasharray="3 3" visibility="hidden"/>`;
+  g+=`<rect x="${m.l}" y="${m.t}" width="${W-m.l-m.r}" height="${H-m.t-m.b}" fill="transparent" id="hit"/>`;
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Trésorerie en fin d'année">${g}</svg>`;
+  const svg=el.querySelector("svg"), hit=el.querySelector("#hit"), xh=el.querySelector("#xh");
+  hit.addEventListener("pointermove",e=>{ const b=svg.getBoundingClientRect(); const x=(e.clientX-b.left)*W/b.width; const i=Math.max(0,Math.min(5,Math.round((x-m.l)/((W-m.l-m.r)/5))));
+    xh.setAttribute("x1",xv(i)); xh.setAttribute("x2",xv(i)); xh.setAttribute("visibility","visible"); showTip(e,`<b>${YL[i]}</b><br>Trésorerie : ${eur(v[i])}`); });
+  hit.addEventListener("pointerleave",()=>{ xh.setAttribute("visibility","hidden"); hideTip(); });
+}
+function tornado(el, rows, base){
+  const W=620,rowH=30,m={l:190,r:70,t:8,b:24},H=m.t+m.b+rows.length*rowH;
+  const vals=rows.flatMap(r=>[r.lo,r.hi,base]); const sc=nice(Math.min(...vals),Math.max(...vals),4);
+  const xv=(x)=>m.l+(W-m.l-m.r)*(x-sc.lo)/(sc.hi-sc.lo);
+  let g="";
+  for (const t of sc.ticks){ g+=`<line x1="${xv(t)}" x2="${xv(t)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--grid)"/><text x="${xv(t)}" y="${H-8}" text-anchor="middle">${keur(t)}</text>`; }
+  rows.forEach((r,i)=>{
+    const y=m.t+i*rowH+6, h=rowH-12;
+    g+=`<text x="${m.l-8}" y="${y+h/2+3.5}" text-anchor="end" style="fill:var(--ink-2);font-family:var(--f-body);font-size:11.5px">${esc(r.label)}</text>`;
+    for (const [v,lab] of [[r.lo,"−20 %"],[r.hi,"+20 %"]]){
+      const a=Math.min(xv(base),xv(v)), w=Math.abs(xv(v)-xv(base));
+      g+=`<rect x="${a}" y="${y}" width="${Math.max(0,w)}" height="${h}" rx="3" fill="${v>=base?"var(--pos)":"var(--neg)"}" data-t="${esc(r.label)} ${lab} : VAN ${eur(v)} (${v>=base?"+":"−"}${eur(Math.abs(v-base))})"/>`;
+    }
+  });
+  g+=`<line x1="${xv(base)}" x2="${xv(base)}" y1="${m.t}" y2="${H-m.b}" stroke="var(--ink)" stroke-width="1.5"/>`;
+  g+=`<text x="${xv(base)}" y="${m.t+2}" text-anchor="middle" dy="-1" style="fill:var(--ink)"></text>`;
+  el.innerHTML=`<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Sensibilité de la VAN">${g}</svg>`;
+  el.querySelectorAll("rect[data-t]").forEach(r=>{ r.addEventListener("pointermove",e=>showTip(e,r.dataset.t)); r.addEventListener("pointerleave",hideTip); });
+}
+
+/* ---------- rendu ---------- */
+function table(rows){
+  let h=`<table><thead><tr><th></th>${YL.map(y=>`<th>${y}</th>`).join("")}</tr></thead><tbody>`;
+  for (const r of rows){
+    if (r.pct) { h+=`<tr class="pct"><td>${esc(r.l)}</td>${r.v.map(v=>`<td>${v}</td>`).join("")}</tr>`; continue; }
+    h+=`<tr class="${r.tot?"tot":""}"><td>${esc(r.l)}</td>${r.v.map(cellE).join("")}</tr>`;
+  }
+  return h+"</tbody></table>";
+}
+let LAST=null;
+function sensRows(){
+  const base = compute(S).van;
+  const drivers = [
+    ["Prix de vente", s=>{s.kPrix*=1}, ["kPrix"]],
+    ["Volumes (patients)", null, ["kVol"]],
+    ["Coûts variables", null, CV],
+    ["Salaires", null, ["ph_brut","int_brut","tech_brut","qa_brut"]],
+    ["Investissements", null, ["kCapex"]],
+    ["Loyer", null, ["loyerM2"]],
+    ["Autres frais fixes", null, FIX]
+  ];
+  const rows = drivers.map(([label,,keys])=>{
+    const run=(f)=>{ const s={...S}; keys.forEach(k=>s[k]=S[k]*f); return compute(s).van; };
+    return {label, lo:run(0.8), hi:run(1.2)};
+  });
+  rows.sort((a,b)=>Math.abs(b.hi-b.lo)-Math.abs(a.hi-a.lo));
+  return {rows, base};
+}
+function render(){
+  const R = compute(S); LAST=R; const y=R.y;
+  // verdict
+  const v=document.getElementById("verdict");
+  const manque = R.minCash<0;
+  let cls, ic, title, txt;
+  if (manque){ cls="bad"; ic="!"; title=`Il manque ${eur(-R.minCash)} de financement`; txt=`La trésorerie passe sous zéro en ${YL[R.minCashY]}. Augmentez l'apport ou les prêts, ou revoyez les hypothèses (prix, montée en charge, investissements).`; }
+  else if (R.firstEbe===null || (R.dscrMin!==null && R.dscrMin<1.2)){ cls="warn"; ic="!"; title="Plan financé, mais fragile"; txt = R.firstEbe===null ? "L'activité ne devient pas rentable (EBE) avant la fin de l'An 5." : `Le DSCR descend à ${nf1.format(R.dscrMin)} en ${YL[R.dscrMinY]} : les banques demandent en général au moins 1,2.`; }
+  else { cls="ok"; ic="✓"; title="Plan financé et rentable"; txt=`EBE positif dès l'${YL[R.firstEbe]}, trésorerie toujours positive (plus bas : ${eur(R.minCash)} en ${YL[R.minCashY]}).`; }
+  v.className="verdict "+cls; v.innerHTML=`<div class="ic" aria-hidden="true">${ic}</div><div><h3>${title}</h3><p>${txt}</p></div>`;
+  // KPI
+  const k=[];
+  const finChip = R.ressources>=R.besoin ? `<span class="chip ok">✓ couvert par ${keur(R.ressources)}</span>` : `<span class="chip bad">! ressources ${keur(R.ressources)}</span>`;
+  k.push(["Besoin de financement (pic)", eur(R.besoin), finChip, `atteint en ${YL[R.besoinY]}`]);
+  k.push(["Trésorerie la plus basse", eur(R.minCash), R.minCash<0?`<span class="chip bad">! négative</span>`:`<span class="chip ok">✓ positive</span>`, YL[R.minCashY]]);
+  k.push(["Chiffre d'affaires An 5", eur(y[5].ca), "", `${nf0.format(y[5].cures)} cures, ${nf0.format(y[5].patients)} patients`]);
+  k.push(["EBE An 5", eur(y[5].ebe), "", `marge ${pct(y[5].ca?y[5].ebe/y[5].ca:null)}`]);
+  k.push(["Premier EBE positif", R.firstEbe===null?"après An 5":YL[R.firstEbe], R.firstEbe===null?`<span class="chip bad">! non atteint</span>`:"", R.firstRn===null?"résultat net : après An 5":`résultat net positif : ${YL[R.firstRn]}`]);
+  const srOk = isFinite(R.srPat) && y[3].patients>=R.srPat;
+  k.push(["Seuil de rentabilité (An 3)", isFinite(R.srPat)?`${nf0.format(Math.ceil(R.srPat))} patients`:"inatteignable", isFinite(R.srPat)?(srOk?`<span class="chip ok">✓ ${nf0.format(y[3].patients)} prévus</span>`:`<span class="chip warn">! ${nf0.format(y[3].patients)} prévus</span>`):"", isFinite(R.srCures)?`${nf0.format(Math.ceil(R.srCures))} cures par an`:"marge par cure négative"]);
+  k.push(["VAN à "+nf1.format(S.wacc)+" %", eur(R.van), R.van>=0?`<span class="chip ok">✓ crée de la valeur</span>`:`<span class="chip bad">! détruit de la valeur</span>`, S.tvMult>0?`dont valeur de revente ${keur(R.tv)} actualisée`:"sans valeur de revente"]);
+  k.push(["TRI du projet", R.tri===null?"n/a":pct(R.tri), "", "taux qui annule la VAN"]);
+  k.push(["Délai de récupération", R.payback===null?"> 5 ans":`${nf1.format(R.payback)} ans`, "", "investissement remboursé par les flux"]);
+  k.push(["DSCR minimum (An 3 à 5)", R.dscrMin===null?"n/a":nf1.format(R.dscrMin), R.dscrMin===null?"":(R.dscrMin>=1.2?`<span class="chip ok">✓ ≥ 1,2</span>`:`<span class="chip warn">! &lt; 1,2</span>`), R.dscrMinY===null?"":YL[R.dscrMinY]]);
+  document.getElementById("kpis").innerHTML = k.map(([a,b,c,d])=>`<div class="kpi"><span class="k">${a}</span><span class="v">${b}</span>${c}<span class="s">${d}</span></div>`).join("");
+  // charts
+  barChart(document.getElementById("chartCA"), [{n:"Chiffre d'affaires",c:"var(--s1)",v:y.map(o=>o.ca)},{n:"Charges totales",c:"var(--s2)",v:y.map(o=>o.charges)}]);
+  lineChart(document.getElementById("chartCash"), y.map(o=>o.cash));
+  const sr=sensRows(); tornado(document.getElementById("chartTornado"), sr.rows, sr.base);
+  // unit
+  const u3=y[3], u5=y[5];
+  const cvEff3=u3.cvUnit/(1-S.perte/100);
+  document.getElementById("unit").innerHTML = [
+    [eur(u3.prix),"Prix d'une cure (An 3)"],
+    [eur(cvEff3),"Coût variable, pertes incluses"],
+    [eur(R.mcvUnit3),`Marge sur coût variable (${pct(R.mcvUnit3/u3.prix)})`],
+    [eur(u3.cures?u3.charges/u3.cures:0),"Coût complet d'une cure (An 3)"],
+    [eur(u5.cures?u5.charges/u5.cures:0),"Coût complet d'une cure (An 5)"]
+  ].map(([a,b])=>`<div><b>${a}</b><span>${b}</span></div>`).join("");
+  // P&L
+  const P=(f)=>y.map(f);
+  document.getElementById("pl").innerHTML = table([
+    {l:"Patients suivis", v:P(o=>o.patients)},
+    {l:"Cures facturées", v:P(o=>o.cures)},
+    {l:"Chiffre d'affaires", v:P(o=>o.ca), tot:1},
+    {l:"Coûts variables", v:P(o=>-o.cv)},
+    {l:"Marge brute", v:P(o=>o.mb), tot:1},
+    {l:"Taux de marge brute", v:P(o=>o.ca?pct(o.mb/o.ca):"n/a"), pct:1},
+    {l:"Pharmacien(ne) responsable", v:P(o=>-o.sPh)},
+    {l:"Pharmacien intérimaire", v:P(o=>-o.sInt)},
+    {l:"Techniciens de production", v:P(o=>-o.sTech)},
+    {l:"Qualité et administration", v:P(o=>-o.sQa)},
+    {l:"Loyer et charges locatives", v:P(o=>-o.loyer)},
+    {l:"Autres frais fixes", v:P(o=>-o.fix)},
+    {l:"EBE (excédent brut d'exploitation)", v:P(o=>o.ebe), tot:1},
+    {l:"Marge d'EBE", v:P(o=>o.ca?pct(o.ebe/o.ca):"n/a"), pct:1},
+    {l:"Dotations aux amortissements", v:P(o=>-o.dap)},
+    {l:"Résultat d'exploitation", v:P(o=>o.rex), tot:1},
+    {l:"Charges financières (intérêts)", v:P(o=>-o.int)},
+    {l:"Quote-part de subvention", v:P(o=>o.repSub)},
+    {l:"Résultat avant impôt", v:P(o=>o.rcai)},
+    {l:"Impôt sur les sociétés", v:P(o=>-o.is)},
+    {l:"Résultat net", v:P(o=>o.rn), tot:1},
+    {l:"Capacité d'autofinancement (CAF)", v:P(o=>o.caf)}
+  ]);
+  document.getElementById("cash").innerHTML = table([
+    {l:"CAF", v:P(o=>o.caf)},
+    {l:"Variation du BFR", v:P(o=>-o.dBfr)},
+    {l:"Investissements", v:P(o=>-o.capex)},
+    {l:"Dépôt de garantie (3 mois de loyer)", v:P(o=>-o.depot)},
+    {l:"Apport des associés", v:P(o=>o.apport)},
+    {l:"Subventions", v:P(o=>o.subv)},
+    {l:"Emprunts reçus", v:P(o=>o.emprunts)},
+    {l:"Remboursement des emprunts", v:P(o=>-o.princ)},
+    {l:"Flux net de l'année", v:P(o=>o.flux), tot:1},
+    {l:"Trésorerie en fin d'année", v:P(o=>o.cash), tot:1},
+    {l:"BFR en fin d'année", v:P(o=>o.bfr)},
+    {l:"Dette restante", v:P(o=>o.debt)}
+  ]);
+  // financement
+  const pertes = Math.max(0, R.besoin - R.capex - R.depot);
+  const fin = [["Investissements",R.capex],["Dépôt de garantie",R.depot],["Pertes de démarrage et BFR jusqu'au pic",pertes]];
+  const res = [["Apport des associés",S.apport],["Subventions",S.subv],["Prêt bancaire",S.bk_a],["Prêt Bpifrance",S.bpi_a],["Prêt d'honneur",S.ho_a]];
+  const marge = R.ressources - R.besoin;
+  document.getElementById("fin").innerHTML = `<table><thead><tr><th>Besoins</th><th>Montant</th></tr></thead><tbody>${fin.map(([a,b])=>`<tr><td>${a}</td>${cellE(b)}</tr>`).join("")}<tr class="tot"><td>Total des besoins</td>${cellE(R.besoin)}</tr></tbody></table>
+  <table style="margin-top:12px"><thead><tr><th>Ressources</th><th>Montant</th></tr></thead><tbody>${res.map(([a,b])=>`<tr><td>${a}</td>${cellE(b)}</tr>`).join("")}<tr class="tot"><td>Total des ressources</td>${cellE(R.ressources)}</tr><tr class="tot"><td>${marge>=0?"Marge de sécurité":"Manque à financer"}</td>${cellE(marge)}</tr></tbody></table>`;
+  // ratios
+  document.getElementById("ratios").innerHTML = `<table><thead><tr><th></th>${YL.map(a=>`<th>${a}</th>`).join("")}</tr></thead><tbody>
+    <tr><td>Effectif (ETP)</td>${y.map(o=>`<td>${o.t===0?"montage":nf1.format(o.etp)}</td>`).join("")}</tr>
+    <tr><td>dont techniciens</td>${y.map(o=>`<td>${o.t===0?"1 (partiel)":o.nTech}</td>`).join("")}</tr>
+    <tr><td>Taux de marge brute</td>${y.map(o=>`<td>${o.ca?pct(o.mb/o.ca):"n/a"}</td>`).join("")}</tr>
+    <tr><td>Marge d'EBE</td>${y.map(o=>`<td>${o.ca?pct(o.ebe/o.ca):"n/a"}</td>`).join("")}</tr>
+    <tr><td>Marge nette</td>${y.map(o=>`<td>${o.ca?pct(o.rn/o.ca):"n/a"}</td>`).join("")}</tr>
+    <tr><td>Masse salariale / CA</td>${y.map(o=>`<td>${o.ca?pct(o.pers/o.ca):"n/a"}</td>`).join("")}</tr>
+    <tr><td>DSCR</td>${y.map(o=>`<td class="${o.dscr!==null&&o.dscr<1.2?"neg":""}">${o.dscr===null?"n/a":nf1.format(o.dscr)}</td>`).join("")}</tr>
+    <tr><td>Dette / fonds propres</td>${y.map(o=>`<td>${o.gearing===null?"fonds propres négatifs":nf1.format(o.gearing)}</td>`).join("")}</tr>
+    <tr><td>Fonds propres</td>${y.map(o=>cellE(o.equity)).join("")}</tr>
+  </tbody></table>`;
+  // scénario
+  const sc = matchScen();
+  document.querySelectorAll("[data-scen]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.scen===sc ? "true":"false"));
+  syncInputs();
+}
+const SCEN = {pess:{kVol:0.7,kPrix:0.9,kCapex:1.2}, real:{kVol:1,kPrix:1,kCapex:1}, opti:{kVol:1.25,kPrix:1.05,kCapex:0.95}};
+function matchScen(){ for (const k in SCEN){ const s=SCEN[k]; if (Object.keys(s).every(x=>Math.abs(S[x]-s[x])<1e-9)) return k; } return null; }
+
+/* ---------- événements ---------- */
+buildForm();
+document.addEventListener("input",e=>{ const k=e.target.dataset&&e.target.dataset.k || (["kVol","kPrix","kCapex"].includes(e.target.id)?e.target.id:null); if(!k) return;
+  const v=parseFloat(String(e.target.value).replace(",", ".")); if (!isFinite(v)) return; S[k]=v; save(); render(); });
+document.querySelectorAll(".coef input").forEach(i=>i.dataset.k=i.id);
+document.addEventListener("click",e=>{
+  const r=e.target.closest("[data-reset]"); if (r){ r.dataset.reset.split(" ").forEach(k=>S[k]=D[k]); save(); render(); return; }
+  const s=e.target.closest("[data-scen]"); if (s){ Object.assign(S,SCEN[s.dataset.scen]); save(); render(); }
+});
+let armed=false;
+document.getElementById("resetAll").addEventListener("click",e=>{
+  const b=e.currentTarget;
+  if (!armed){ armed=true; b.textContent="Confirmer : tout réinitialiser"; setTimeout(()=>{armed=false;b.textContent="Revenir aux valeurs par défaut";},4000); return; }
+  armed=false; b.textContent="Revenir aux valeurs par défaut"; S={...D}; save(); render(); toast("Valeurs par défaut rétablies");
+});
+function toast(t){ const d=document.createElement("div"); d.className="toast"; d.textContent=t; document.body.appendChild(d); setTimeout(()=>d.remove(),2200); }
+document.getElementById("copyCsv").addEventListener("click",()=>{
+  const out=[];
+  document.querySelectorAll("#pl table, #cash table, #ratios table").forEach(t=>{ t.querySelectorAll("tr").forEach(tr=>out.push([...tr.children].map(c=>'"'+c.textContent.replace(/ | /g," ").replace(/"/g,'""')+'"').join(";"))); out.push(""); });
+  const txt=out.join("\n");
+  navigator.clipboard.writeText(txt).then(()=>toast("Tableaux copiés : collez-les dans Excel ou Sheets"),()=>{ const ta=document.createElement("textarea"); ta.value=txt; document.body.appendChild(ta); ta.select(); toast("Copie refusée : le texte est sélectionné, faites Cmd+C"); setTimeout(()=>ta.remove(),8000); });
+});
+render();
+</script>
+
+</body>
+</html>
