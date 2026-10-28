@@ -133,6 +133,12 @@ td.neg{color:var(--crit-ink)}
 .margin-line{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px;margin-top:4px;font-size:13.5px}
 .margin-line b{font-family:var(--f-display);font-size:18px;font-variant-numeric:tabular-nums}
 .pay{display:grid;gap:12px}
+.flt{display:grid;gap:8px;border:1px dashed var(--line);border-radius:8px;padding:10px 12px}
+.flt-h{font-size:12px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em}
+.flt-row{display:grid;gap:4px}
+.flt-row .nm{font-size:12.5px;font-weight:500}
+.flt .seg{flex-wrap:wrap;justify-self:start}
+.flt .seg button{padding:5px 10px;font-size:12.5px}
 .stack{display:flex;height:34px;border-radius:6px;overflow:hidden;gap:2px;background:var(--panel)}
 .stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden}
 .pay-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -199,7 +205,7 @@ td.neg{color:var(--crit-ink)}
         </section>
         <section class="card">
           <h2>Qui paie la cure</h2>
-          <p class="sub">Base de remboursement = prix de la cure délivrée au patient.</p>
+          <p class="sub">Les règles de prise en charge ne sont pas confirmées : choisissez un scénario pour chaque point incertain.</p>
           <div class="pay" id="pay"></div>
         </section>
       </div>
@@ -237,7 +243,7 @@ td.neg{color:var(--crit-ink)}
         </section>
       </div>
 
-      <p class="note">Hypothèses indicatives à valider : prix et volumes auprès des pharmacies hospitalières, coûts d'aménagement auprès d'un bureau d'études salles propres, taux de remboursement auprès de l'Assurance Maladie. Montants HT, TVA non modélisée. Impôt sur les sociétés : 15 % jusqu'à 42 500 € de bénéfice puis 25 %, avec report des pertes. Le simulateur ne fixe pas de mode de financement : il calcule le besoin à couvrir.</p>
+      <p class="note">Hypothèses indicatives à valider : prix et volumes auprès des pharmacies hospitalières, coûts d'aménagement auprès d'un bureau d'études salles propres, taux et base de remboursement auprès de l'Assurance Maladie (scénarios au choix dans « Qui paie la cure »). Montants HT, TVA non modélisée. Impôt sur les sociétés : 15 % jusqu'à 42 500 € de bénéfice puis 25 %, avec report des pertes. Le simulateur ne fixe pas de mode de financement : il calcule le besoin à couvrir.</p>
     </main>
   </div>
 </div>
@@ -249,7 +255,7 @@ const D = {
   kVol:1, kPrix:1, kCapex:1,
   pat1:120, pat2:260, pat3:400, pat4:520, pat5:620,
   curesPat:3, prix:620, gPrix:2, perte:3,
-  majo:0, rembSecu:65,
+  majo:0, rembSecu:65, baseSecu:100, circ:0, mut:1, tp:1,
   cv_conso:45, cv_cq:70, cv_tra:35, cv_trr:45, cv_prel:25, cv_emb:12, cv_dech:4, infl:2.5,
   charges:45, gSal:2,
   ph_brut:52000, ph_etp:1, ph_m0:6,
@@ -357,7 +363,8 @@ const SECTIONS = [
   ]},
   {t:"Remboursement", items:[
     F("majo","Marge de la pharmacie qui délivre","% du prix","0 si la pharmacie de l'hôpital délivre sans marge. Une officine ajoute sa marge au prix.",1),
-    F("rembSecu","Part remboursée par l'Assurance Maladie","%","À confirmer : 65 % est le taux courant des préparations magistrales remboursables. La mutuelle couvre souvent le reste.",5)
+    F("rembSecu","Part remboursée par l'Assurance Maladie","%","Non confirmé pour ce produit. 65 % : taux courant d'une préparation magistrale remboursable. 100 % : patient en ALD (si le collyre soigne cette maladie) ou à la C2S. 0 % : non remboursable.",5),
+    F("baseSecu","Base de remboursement","% du prix","Non confirmé. L'Assurance Maladie rembourse sur son propre tarif, qui peut être inférieur au prix de la cure. 100 % = elle rembourse sur le prix entier.",5)
   ]},
   {t:"Coûts de production par cure", items: CV.map(([k,l])=>F(k,l,"€",CVHINT[k],1)).concat([F("infl","Inflation des coûts","% / an","S'applique aux coûts de production, au loyer et aux frais fixes.",0.5)])},
   {t:"Personnel", items:[
@@ -547,18 +554,28 @@ function render(){
     `<div class="margin-line"><span>Marge par cure sur le coût direct : <b>${eur(yc.prix-yc.cvEff)}</b></span><span>Marge par cure sur le coût complet : <b style="color:${marge<0?"var(--crit-ink)":"var(--good-ink)"}">${eur(marge)}</b></span></div>` +
     `<details><summary class="hint" style="cursor:pointer">Détail du coût direct</summary><div class="tbl"><table><tbody>${cvParts.map(([l,a])=>`<tr><td>${esc(l)}</td>${cellE(a)}</tr>`).join("")}</tbody></table></div></details>`;
   // qui paie
-  const prixPublic = yc.prix*(1+S.majo/100), ps = Math.max(0,Math.min(100,S.rembSecu)), secu = prixPublic*ps/100, patient = prixPublic-secu;
-  document.getElementById("pay").innerHTML = `
-    <div class="pay-legend"><div style="border-color:var(--s3)"><b>${eur(prixPublic)}</b><span>Prix de la cure pour le patient${S.majo?` (marge de la pharmacie de ${nf0.format(S.majo)} % incluse)`:""}</span></div></div>
-    <div class="stack" role="img" aria-label="Répartition : ${nf0.format(ps)} % Assurance Maladie, ${nf0.format(100-ps)} % patient">
-      ${ps>0?`<div style="flex:${ps};background:var(--s1)">${ps>=18?`Assurance Maladie ${nf0.format(ps)} %`:""}</div>`:""}
-      ${ps<100?`<div style="flex:${100-ps};background:var(--s2)">${100-ps>=18?`Patient ${nf0.format(100-ps)} %`:""}</div>`:""}
-    </div>
-    <div class="pay-legend">
-      <div style="border-color:var(--s1)"><b>${eur(secu)}</b><span>Remboursé par l'Assurance Maladie</span></div>
-      <div style="border-color:var(--s2)"><b>${eur(patient)}</b><span>Reste à la charge du patient, souvent couvert par la mutuelle</span></div>
-    </div>
-    <div class="callout"><b>Ce que le patient avance :</b> avec le tiers payant, seulement ${eur(patient)}, ou rien si sa mutuelle pratique aussi le tiers payant. Sans tiers payant, il avance ${eur(prixPublic)} puis se fait rembourser ${eur(secu)}.<br><br>Si c'est la pharmacie de l'hôpital qui délivre le collyre pendant un séjour à l'hôpital, l'hôpital paie en général la cure et le patient n'avance rien. Le taux exact et le circuit sont à confirmer auprès de l'Assurance Maladie.</div>`;
+  const P0 = yc.prix*(1+S.majo/100), ps = Math.max(0,Math.min(100,S.rembSecu)), bs = Math.max(0,Math.min(100,S.baseSecu));
+  const hop = S.circ===1, base = P0*bs/100, secu = hop?0:base*ps/100, tm = hop?0:base-secu, mutu = hop?0:(S.mut?tm:0), patient = hop?0:P0-secu-mutu;
+  const seg = (k,opts,hint)=>`<div class="flt-row"><span class="nm">${k[1]}</span><div class="seg" role="group" aria-label="${k[1]}">${opts.map(([v,l])=>`<button type="button" data-set="${k[0]}:${v}" aria-pressed="${Math.abs(S[k[0]]-v)<1e-9}">${l}</button>`).join("")}</div>${hint?`<span class="hint">${hint}</span>`:""}</div>`;
+  let flt = `<div class="flt"><span class="flt-h">Scénarios à confirmer</span>` +
+    seg(["circ","Qui délivre le collyre"],[[0,"Pharmacie de ville"],[1,"Pharmacie de l'hôpital"]], "À demander à la pharmacienne responsable : comment l'hôpital facturait-il la cure ?");
+  if (!hop) flt +=
+    seg(["rembSecu","Taux de remboursement"],[[0,"Non remboursé"],[65,"65 %"],[100,"100 % (ALD, C2S)"]], "À demander à la CPAM : le collyre est-il remboursable, à quel taux ?") +
+    seg(["baseSecu","Remboursé sur"],[[100,"Le prix de la cure"],[80,"Un tarif Sécu plus bas (80 %)"]], "À demander à la CPAM : sur quel tarif de référence ? Le pourcentage se règle dans les hypothèses.") +
+    seg(["mut","Mutuelle du patient"],[[1,"Rembourse le reste"],[0,"Pas de mutuelle"]], "Une mutuelle courante rembourse la part non prise en charge du tarif Sécu, pas l'écart avec le prix.") +
+    seg(["tp","Avance des frais"],[[1,"Tiers payant"],[0,"Sans tiers payant"]], "");
+  flt += `</div>`;
+  const parts = hop ? [["Hôpital",P0,"var(--s1)"]] : [["Assurance Maladie",secu,"var(--s1)"],["Mutuelle",mutu,"var(--s3)"],["Patient",patient,"var(--s2)"]];
+  const tot = P0||1, pc=v=>Math.round(v/tot*100);
+  const stack = `<div class="stack" role="img" aria-label="Répartition : ${parts.map(([n,v])=>`${n} ${pc(v)} %`).join(", ")}">${parts.filter(x=>x[1]>0.005).map(([n,v,c])=>`<div style="flex:${v};background:${c}">${v/tot>=0.18?`${n} ${pc(v)} %`:""}</div>`).join("")}</div>`;
+  const legend = `<div class="pay-legend">${parts.map(([n,v,c])=>`<div style="border-color:${c}"><b>${eur(v)}</b><span>${n==="Hôpital"?"Payé par l'hôpital sur son budget":n==="Assurance Maladie"?`Remboursé par l'Assurance Maladie (${nf0.format(ps)} % de ${eur(base)})`:n==="Mutuelle"?(S.mut?"Remboursé par la mutuelle":"Aucune mutuelle"):"Reste à la charge du patient"}</span></div>`).join("")}</div>`;
+  let ptx;
+  if (hop) ptx = `<b>Ce que le patient avance :</b> rien dans ce scénario. La cure est délivrée par la pharmacie de l'hôpital, qui la paie sur son budget. Circuit à confirmer.`;
+  else if (S.tp) ptx = `<b>Ce que le patient avance :</b> ${eur(patient)}. Avec le tiers payant, la pharmacie se fait payer directement par l'Assurance Maladie${S.mut?" et par la mutuelle (à vérifier : toutes les mutuelles ne le pratiquent pas)":""}.`;
+  else ptx = `<b>Ce que le patient avance :</b> ${eur(P0)}, puis il se fait rembourser ${eur(secu+mutu)}${S.mut?` (${eur(secu)} par l'Assurance Maladie, ${eur(mutu)} par la mutuelle)`:" par l'Assurance Maladie"}. Il lui reste ${eur(patient)} à payer.`;
+  document.getElementById("pay").innerHTML = flt + `
+    <div class="pay-legend"><div style="border-color:var(--ink-3)"><b>${eur(P0)}</b><span>Prix de la cure pour le patient${S.majo?` (marge de la pharmacie de ${nf0.format(S.majo)} % incluse)`:""}</span></div></div>
+    ${stack}${legend}<div class="callout">${ptx}<br><br>Aucune de ces règles n'est confirmée pour ce produit. Les questions sont dans le document des contacts (CPAM et pharmacienne responsable).</div>`;
   barChart(document.getElementById("chartCA"), [{n:"Chiffre d'affaires",c:"var(--s1)",v:y.slice(0,N+1).map(o=>o.ca)},{n:"Charges",c:"var(--s2)",v:y.slice(0,N+1).map(o=>o.charges)}], labels);
   lineChart(document.getElementById("chartCash"), y.slice(0,N+1).map(o=>o.cash), labels);
   const P=(f)=>y.map(f);
@@ -607,6 +624,7 @@ document.addEventListener("input",e=>{ const k=e.target.dataset && e.target.data
   const v=parseFloat(String(e.target.value).replace(",", ".")); if (!isFinite(v)) return; S[k]=v; save(); render(); });
 document.addEventListener("click",e=>{
   const r=e.target.closest("[data-reset]"); if (r){ r.dataset.reset.split(" ").forEach(k=>S[k]=D[k]); save(); render(); return; }
+  const ds=e.target.closest("[data-set]"); if (ds){ const [k,v]=ds.dataset.set.split(":"); S[k]=+v; save(); render(); return; }
   const s=e.target.closest("[data-scen]"); if (s){ Object.assign(S,SCEN[s.dataset.scen]); save(); render(); return; }
   const h=e.target.closest("[data-h]"); if (h){ HZ=+h.dataset.h; save(); render(); }
 });
